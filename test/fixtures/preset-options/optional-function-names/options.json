@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    ["../../../../dist", {
+      "objectName": "custom",
+      "objectIsCallable": true
+    }]
+  ]
+}

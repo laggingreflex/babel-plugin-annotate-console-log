@@ -63,18 +63,22 @@ export default ({
 
   return {
     visitor: {
-      CallExpression (path: Object) {
+      CallExpression (path: Object, state: Object) {
         const callee = path.node.callee;
 
-        if (!t.isMemberExpression(callee)) {
+        const calleeObjectName = state.opts.objectName || 'console';
+        const calleePropertiesNames = state.opts.objectProperties || ['log', 'info', 'warn', 'error'];
+        const objectIsCallable = state.opts.objectIsCallable;
+
+        if (!objectIsCallable && !t.isMemberExpression(callee)) {
           return;
         }
 
-        if (callee.object.name !== 'console') {
+        if (callee.object && callee.object.name !== calleeObjectName) {
           return;
         }
 
-        if (callee.property.name !== 'log' && callee.property.name !== 'info' && callee.property.name !== 'warn' && callee.property.name !== 'error') {
+        if (!objectIsCallable && calleePropertiesNames.indexOf(callee.property.name) === -1) {
           return;
         }
 
